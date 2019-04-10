@@ -18,7 +18,7 @@
     Emir Turkes can be contacted at eturkes@bu.edu
 -->
 
-# lake-2016
+# Lake 2016 snRNAseq Analysis
 #### *This analysis is currently incomplete*
 
 Analysis of Lake 2016 snRNAseq
