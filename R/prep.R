@@ -16,46 +16,20 @@
 #
 #    Emir Turkes can be contacted at eturkes@bu.edu
 
-# Publicly available data that do not need to be backed up
-/data/
+dat <- read.delim(
+  "/lake-2016-snRNAseq/data/Lake-2016_Gene_TPM.dat",
+  "\t",
+  header = FALSE,
+  stringsAsFactors = FALSE
+)
+ann <- read.table(
+  "/lake-2016-snRNAseq/data/Lake-2016_Gene_TPM_Sample-annotation.txt",
+  header = TRUE
+)
 
-# History files
-.Rhistory
-.Rapp.history
-
-# Session Data files
-.RData
-
-# User-specific files
-.Ruserdata
-
-# Example code in package build process
-*-Ex.R
-
-# Output files from R CMD build
-/*.tar.gz
-
-# Output files from R CMD check
-/*.Rcheck/
-
-# RStudio files
-.Rproj.user/
-
-# produced vignettes
-vignettes/*.html
-vignettes/*.pdf
-
-# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
-.httr-oauth
-
-# knitr and R markdown default cache directories
-*_cache/
-/cache/
-
-# Temporary files created by R markdown
-*.utf8.md
-*.knit.md
-
-# Added by Packrat
-packrat/lib*/
-packrat/src/
+gene_names <- dat[, 1]
+cell_names <- dat[1,]
+cell_names <- as.character(unlist(cell_names))
+cell_names <- cell_names[-1]
+gene_names <- gene_names[-1]
+dat <- dat[-1, -1]
