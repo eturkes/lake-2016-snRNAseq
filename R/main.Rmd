@@ -1,0 +1,89 @@
+---
+title: "lake-2016-snRNAseq Analysis"
+author: "Emir Turkes"
+date: '`r strftime(Sys.time(), format = "%B %d, %Y")`'
+output:
+    html_document:
+        number_sections: true
+        theme: lumen
+        toc: true
+        toc_float:
+            collapsed: false
+            smooth_scroll: false
+knit: (
+    function(inputFile, encoding) {
+        rmarkdown::render(
+            inputFile,
+            encoding = encoding,
+            output_file = "../results/lake-2016-snRNAseq.html"
+            )
+        }
+    )
+---
+
+```{r, include = FALSE}
+#    This file is part of lake-2016-snRNAseq.
+#    Copyright (C) 2019  Emir Turkes
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#    Emir Turkes can be contacted at eturkes@bu.edu
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style type="text/css">
+
+body{ /* Normal  */
+  font-size: 16px;
+}
+h1.title {
+  font-size: 35px;
+}
+h1 { /* Header 1 */
+  font-size: 24px;
+}
+h2 { /* Header 2 */
+  font-size: 22px;
+}
+h3 { /* Header 3 */
+  font-size: 20px;
+}
+.toc-content {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+div.tocify {
+  width: 100%;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+.tocify-subheader .tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 35px;
+  text-indent: 0;
+}
+div.main-container {
+  max-width: none;
+  width: 100%;
+}
+
+</style>
+
+*This is a broad initial analysis that prepares and characterizes the data for use in other projects.*
+
+The background for this data is as follows:
