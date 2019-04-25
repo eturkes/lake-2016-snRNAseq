@@ -27,9 +27,19 @@ ann <- read.table(
   header = TRUE
 )
 
+# Make data easier to work with.
 gene_names <- dat[, 1]
 cell_names <- dat[1,]
 cell_names <- as.character(unlist(cell_names))
 cell_names <- cell_names[-1]
 gene_names <- gene_names[-1]
 dat <- dat[-1, -1]
+
+# Set up necessary cleaning for later.
+exclude <- duplicated(gene_names)
+keep_cells <- cell_names %in% ann[ , 2]
+dat <- dat[ , keep_cells]
+cell_names <- cell_names[keep_cells]
+colnames(dat) <- cell_names
+reorder <- order(colnames(dat))
+dat <- dat[ , reorder]
