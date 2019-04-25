@@ -17,13 +17,13 @@
 #    Emir Turkes can be contacted at eturkes@bu.edu
 
 dat <- read.delim(
-  "/lake-2016-snRNAseq/data/Lake-2016_Gene_TPM.dat",
+  "../data/Lake-2016_Gene_TPM.dat",
   "\t",
   header = FALSE,
   stringsAsFactors = FALSE
 )
 ann <- read.table(
-  "/lake-2016-snRNAseq/data/Lake-2016_Gene_TPM_Sample-annotation.txt",
+  "../data/Lake-2016_Gene_TPM_Sample-annotation.txt",
   header = TRUE
 )
 
