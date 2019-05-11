@@ -1,29 +1,28 @@
 ---
-title: "lake-2016-snRNAseq Analysis"
+title:               "Lake 2016 snRNAseq Report"
 author:
-  - "Emir Turkes"
-  - "Columbia University"
-date: '`r strftime(Sys.time(), format = "%B %d, %Y")`'
-bibliography: "../lake-2016-snRNAseq.bib"
-link-citations: true
+  - name:            "Emir Turkes"
+  - name:            "Columbia University"
+date:                '`r strftime(Sys.time(), format = "%B %d, %Y")`'
+bibliography:        "../lake-2016-snRNAseq.bib"
+biblio-style:        apalike
+link-citations:      true
 output:
   html_document:
     number_sections: true
-    theme: lumen
-    toc: true
-    toc_depth: 2
+    theme:           lumen
+    toc:             true
+    toc_depth:       2
     toc_float:
-      collapsed: false
+      collapsed:     false
       smooth_scroll: false
-knit: (
-  function(inputFile, encoding) {
-    rmarkdown::render(
-      inputFile,
-      encoding = encoding,
-      output_file = "../results/lake-2016-snRNAseq.html"
-      )
-    }
-  )
+
+knit:
+  (function(inputFile, encoding) {rmarkdown::render(
+    inputFile,
+    encoding = encoding,
+    output_file = "../results/lake-2016-snRNAseq-report.html"
+  )})
 ---
 
 ```{r, include = FALSE}
@@ -45,7 +44,7 @@ knit: (
 #
 #    Emir Turkes can be contacted at emir.turkes@eturkes.com
 
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk[["set"]](echo = TRUE)
 ```
 
 <style type="text/css">

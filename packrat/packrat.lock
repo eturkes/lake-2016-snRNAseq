@@ -48,6 +48,11 @@ Source: CRAN
 Version: 0.2.1
 Hash: 622be49032fe50bd42e96aaef613e209
 
+Package: backports
+Source: CRAN
+Version: 1.1.4
+Hash: e88df919a68845e664e019570e2251b6
+
 Package: base64enc
 Source: CRAN
 Version: 0.1-3
@@ -314,6 +319,12 @@ Version: 1.12
 Hash: 241424e590a32decf6e9f0cd32a5760b
 Requires: base64enc, evaluate, htmltools, jsonlite, knitr, mime,
     stringr, tinytex, yaml
+
+Package: rprojroot
+Source: CRAN
+Version: 1.3-2
+Hash: a25c3f70c166fb3fbabc410eb32b6366
+Requires: backports
 
 Package: rstudioapi
 Source: CRAN
