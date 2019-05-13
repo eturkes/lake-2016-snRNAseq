@@ -93,7 +93,7 @@ div.main-container {
 The background for this data is as follows:
 
 - dbGaP Accession: [phs000833](https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs000833.v7.p1).
-- Part of [SCAP-T](https://www.scap-t.org/).
+- Part of [SCAP-T](https://www.scap-t.org/) and originally published in @lake_neuronal_2016.
 - Single patient, age = 51, sex = female, NeuN + nuclei from normal mostmortem.
 - 6 cortical regions: BA8, BA10, BA21, BA22, BA41, and BA17.
 - Annotated into 8 excitatory and inhibitory neuronal subtypes.
@@ -110,3 +110,16 @@ The source code and instructions for rerunning the analysis can be found at [git
 The following sections breakdown the methods used to transform the contents in `Original Data` to those in `Final Results`.
 
 # Original Data
+
+# To Be Organized
+
+# Conclusion
+
+This concludes the methods used in this analysis.
+Below we simply write the data to disk for exploration in `Final Results` at the top of this report.
+
+```{r}
+devtools::session_info()
+```
+
+# References
