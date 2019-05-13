@@ -113,6 +113,24 @@ The following sections breakdown the methods used to transform the contents in `
 
 # To Be Organized
 
+```{r}
+cc_tree <- data.tree::Node$new("cc_tree")
+  c1 <- cc_tree$AddChild("c1")
+    c1_c1 <- c1$AddChild("c1")
+      c1_c1_c1 <- c1_c1$AddChild("c1")
+      c1_c1_c2 <- c1_c1$AddChild("c2")
+    c1_c2 <- c1$AddChild("c2")
+      c1_c2_c1 <- c1_c2$AddChild("c1")
+      c1_c2_c2 <- c1_c2$AddChild("c2")
+  c2 <- cc_tree$AddChild("c2")
+    c2_c1 <- c2$AddChild("c1")
+      c2_c1_c1 <- c2_c1$AddChild("c1")
+      c2_c1_c2 <- c2_c1$AddChild("c2")
+    c2_c2 <- c2$AddChild("c2")
+      c2_c2_c1 <- c2_c2$AddChild("c1")
+      c2_c2_c2 <- c2_c2$AddChild("c2")
+```
+
 # Conclusion
 
 This concludes the methods used in this analysis.
