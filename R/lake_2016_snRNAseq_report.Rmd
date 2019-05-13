@@ -44,7 +44,7 @@ knit:
 #
 #    Emir Turkes can be contacted at emir.turkes@eturkes.com
 
-knitr::opts_chunk[["set"]](echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 <style type="text/css">
