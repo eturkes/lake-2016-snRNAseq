@@ -18,11 +18,13 @@ output:
       smooth_scroll: false
 
 knit:
-  (function(inputFile, encoding) {rmarkdown::render(
-    inputFile,
-    encoding = encoding,
-    output_file = "../results/lake-2016-snRNAseq-report.html"
-  )})
+  (function(inputFile, encoding) {
+    rmarkdown::render(
+      inputFile,
+      encoding = encoding,
+      output_file = "../results/lake-2016-snRNAseq-report.html"
+    )
+  })
 ---
 
 ```{r, include = FALSE}
@@ -49,42 +51,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <style type="text/css">
 
-body{ /* Normal  */
-  font-size: 16px;
-}
-h1.title {
-  font-size: 35px;
-}
-h1 { /* Header 1 */
-  font-size: 24px;
-}
-h2 { /* Header 2 */
-  font-size: 22px;
-}
-h3 { /* Header 3 */
-  font-size: 20px;
-}
-.toc-content {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-div.tocify {
-  width: 100%;
-}
-.tocify-subheader .tocify-item {
-  font-size: 0.95em;
-  padding-left: 25px;
-  text-indent: 0;
-}
-.tocify-subheader .tocify-subheader .tocify-item {
-  font-size: 0.90em;
-  padding-left: 35px;
-  text-indent: 0;
-}
-div.main-container {
-  max-width: none;
-  width: 100%;
-}
+body{font-size: 16px;}
+h1.title {font-size: 35px;}
+h1 {font-size: 24px;}
+h2 {font-size: 22px;}
+h3 {font-size: 20px;}
+.toc-content {padding-left: 0px; padding-right: 0px;}
+div.tocify {width: 100%;}
+.tocify-subheader .tocify-item {font-size: 0.95em; padding-left: 25px; text-indent: 0;}
+div.main-container {max-width: none; width: 100%;}
 
 </style>
 
