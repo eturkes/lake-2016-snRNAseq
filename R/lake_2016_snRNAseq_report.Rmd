@@ -16,15 +16,10 @@ output:
     toc_float:
       collapsed:     false
       smooth_scroll: false
-
 knit:
   (function(inputFile, encoding) {
     rmarkdown::render(
-      inputFile,
-      encoding = encoding,
-      output_file = "../results/lake-2016-snRNAseq-report.html"
-    )
-  })
+      inputFile, encoding = encoding, output_file = "../results/lake-2016-snRNAseq-report.html")})
 ---
 
 ```{r, include = FALSE}
@@ -50,8 +45,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 <style type="text/css">
-
-body{font-size: 16px;}
+body {font-size: 16px;}
 h1.title {font-size: 35px;}
 h1 {font-size: 24px;}
 h2 {font-size: 22px;}
@@ -60,7 +54,6 @@ h3 {font-size: 20px;}
 div.tocify {width: 100%;}
 .tocify-subheader .tocify-item {font-size: 0.95em; padding-left: 25px; text-indent: 0;}
 div.main-container {max-width: none; width: 100%;}
-
 </style>
 
 *This is a broad initial analysis that prepares and characterizes the data for use in other projects.*
@@ -82,7 +75,18 @@ The source code and instructions for rerunning the analysis can be found at [git
 
 # ~~~~ Breakdown of Methods ~~~~ {-}
 
-The following sections breakdown the methods used to transform the contents in `Original Data` to those in `Final Results`.
+The following top-level sections breakdown the methods used to perform the analysis.
+We start by setting some global variables and loading in any required packages.
+
+```{r}
+data_dir <- file.path(getwd(), "..", "data")
+results_dir <- file.path(getwd(), "..", "results")
+```
+
+```{r}
+library(conflicted)
+library(devtools)
+```
 
 # Original Data
 
@@ -189,13 +193,11 @@ write.table(
 )
 ```
 
-# Conclusion
+# References
 
-This concludes the methods used in this analysis.
-Below we simply write the data to disk for exploration in `Final Results` at the top of this report.
+This is the concluding section of the document.
+Here we write relevant results to disk, output the `session_info`, and create a bibliography for works cited.
 
 ```{r}
-devtools::session_info()
+session_info()
 ```
-
-# References
