@@ -112,6 +112,39 @@ clust <- read.table(file.path(data_dir, "Lake-2016_Gene_TPM_Sample-annotation.tx
 datatable(clust[1:5, ])
 ```
 
+# Preliminary Cleaning
+
+Here we provide more informative labels to things, subset to the regions/cell types we are interested in, and transform the data into more convenient formats for downstream analysis.
+
+## Relabeling and Subsetting {.tabset}
+
+A more elegant solution is planned, but for now, the desired regions/cell types can be set here.
+
+```{r}
+# TODO: Simplify formatting requirements for the variables.
+regions <- "*BA10*"
+cell_types <- "Ex1|Ex2|Ex3|Ex4|Ex5|Ex6|Ex7|Ex8"
+```
+
+### Counts
+
+```{r}
+gene_names <- counts[ , 1]
+cell_names <- counts[1, ]
+cell_names <- as.character(unlist(cell_names))
+cell_names <- cell_names[-1]
+gene_names <- gene_names[-1]
+counts <- counts[-1, -1]
+exclude <- duplicated(gene_names)
+keep_cells <- cell_names %in% clust[ , 2]
+counts <- counts[ , keep_cells]
+cell_names <- cell_names[keep_cells]
+colnames(counts) <- cell_names
+reorder <- order(colnames(counts))
+counts <- counts[ , reorder]
+datatable(counts[1:5, 1:3])
+```
+
 # References
 
 This is the concluding section of the document.
