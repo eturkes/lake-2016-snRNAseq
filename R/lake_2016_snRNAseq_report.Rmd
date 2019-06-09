@@ -73,7 +73,7 @@ The source code and instructions for rerunning the analysis can be found at [git
 
 **Read just this section for the final results of the analysis and a summary of the methods.**
 
-# ~~~~ Breakdown of Methods ~~~~ {-}
+# ~~~ Breakdown of Methods ~~~ {-}
 
 The following top-level sections breakdown the methods used to perform the analysis.
 We start by setting some global variables and loading in any required packages.
@@ -86,111 +86,30 @@ results_dir <- file.path(getwd(), "..", "results")
 ```{r}
 library(conflicted)
 library(devtools)
+library(DT)
 ```
 
-# Original Data
+# Original Data {.tabset}
 
-# To Be Organized
+This section provides a brief look at the raw data before manipulation.
+
+## Counts
+
+```{r, cache = TRUE}
+# This chunk was run with "cache = TRUE".
+counts <- read.delim(
+  file.path(data_dir, "Lake-2016_Gene_TPM.dat.gz"), "\t", header = FALSE, stringsAsFactors = FALSE)
+```
 
 ```{r}
-# cc_tree <- data.tree::Node$new("cc_tree")
-#   c1 <- cc_tree$AddChild("c1")
-#     c1_c1 <- c1$AddChild("c1")
-#       c1_c1_c1 <- c1_c1$AddChild("c1")
-#       c1_c1_c2 <- c1_c1$AddChild("c2")
-#     c1_c2 <- c1$AddChild("c2")
-#       c1_c2_c1 <- c1_c2$AddChild("c1")
-#       c1_c2_c2 <- c1_c2$AddChild("c2")
-#   c2 <- cc_tree$AddChild("c2")
-#     c2_c1 <- c2$AddChild("c1")
-#       c2_c1_c1 <- c2_c1$AddChild("c1")
-#       c2_c1_c2 <- c2_c1$AddChild("c2")
-#     c2_c2 <- c2$AddChild("c2")
-#       c2_c2_c1 <- c2_c2$AddChild("c1")
-#       c2_c2_c2 <- c2_c2$AddChild("c2")
-# 
-# make_tree <- function(levels, children, prefix) {
-#   parent_str <- paste(prefix, "tree", sep = "_")
-#   assign(parent_str, data.tree::Node$new(parent_str))
-#   
-#   for (level in 1:levels) {
-#     
-#   }
-#   
-#   # for (level in 1:levels) {
-#   #   num_parents <- (children ^ level) / children
-#   #   parents <- vector(mode = "character", lenght = num_parents)
-#   # 
-#   #   if (level > 1) {
-#   #     base_parent <- vector(mode = "character", length = 1)
-#   #     for (position in 1:num_parents) {
-#   #       for (sublevel in 1:level) {
-#   #         base_parent <- paste(base_parent, )
-#   #     }
-#   #   }
-#   #   for (parent in 1:parents) {
-#   #     for (child in 1:children) {
-#   #       assign(paste0(prefix, child), paste0(parent_str, "$AddChild"))
-#   #     }
-#   #   }
-#   # }
-# }
-x1 <- read.delim(
-  "../data/Lake-2016_Gene_TPM.dat",
-  "\t", header=F, stringsAsFactors=FALSE
-)
-ann <- read.table(
-  "../data/Lake-2016_Gene_TPM_Sample-annotation.txt",
-  header=T
-)
-gene_names <- x1[,1]
-cell_names <- x1[1,]
-cell_names <- as.character(unlist(cell_names))
-cell_names <- cell_names[-1]
-gene_names <- gene_names[-1]
-x1 <- x1[-1,-1]
-# Not log-transformed TPMs.
-exclude <- duplicated(gene_names)
-keep_cells <- cell_names %in% ann[,2]
-x1 <- x1[, keep_cells]
-cell_names <- cell_names[keep_cells]
-colnames(x1) <- cell_names;
-reorder <- order(colnames(x1))
-x1 <- x1[, reorder]
+datatable(counts[1:5, 1:3])
+```
 
-# Annotations
-ann <- ann[ann[,2] %in% colnames(x1),]
-ann <- ann[order(ann[,2]),]
-keep_source <- as.character(unlist(ann[,4])) %in% "BA10"
-x1 <- x1[, keep_source]
-ann <- ann[ann[,2] %in% colnames(x1),]
-ann <- ann[order(ann[,2]),]
-SOURCE <- as.character(unlist(ann[,4]))
-BATCH <- as.character(unlist(ann[,4]))
-SOURCE[SOURCE=="BA10"] <- "Prefrontal cortex"
-TYPE <- as.character(unlist(ann[3]))
-AGE <- rep("51yo", times=length(BATCH))
-SAMPLE <- colnames(x1)
-SAMPLE <- paste0("X", SAMPLE)
-DATA <- apply(x1, 1, as.numeric)
-DATA <- t(DATA)
-colnames(DATA) <- colnames(x1)
-DATA <- DATA[!exclude, ]
-rownames(DATA) <- gene_names[!exclude]
-ANN <- data.frame(sample=SAMPLE, species=rep("Homo sapiens", times=length(TYPE)),
-                  cell_type=TYPE, source=SOURCE, age=AGE, batch=BATCH)
-rownames(ANN) <- colnames(x1)
+## Clusters
 
-write.table(
-  DATA,
-  file="../data/Lake-2016_Gene_TPM-PFC-pivot.dat",
-  quote=FALSE, sep="\t", col.names=NA, row.names=TRUE
-)
-write.table(
-  ANN,
-  file="../data/Lake-2016_Gene_TPM_Sample-annotation-PFC-pivot.txt",
-  quote=FALSE, sep="\t", col.names=TRUE, row.names=FALSE
-)
+```{r}
+clust <- read.table(file.path(data_dir, "Lake-2016_Gene_TPM_Sample-annotation.txt"), header = TRUE)
+datatable(clust[1:5, ])
 ```
 
 # References
