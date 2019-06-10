@@ -89,6 +89,7 @@ library(devtools)
 library(DT)
 library(SingleCellExperiment)
 library(scater)
+library(ggplot2)
 ```
 
 # Original Data {.tabset}
@@ -165,19 +166,19 @@ data <- t(data)
 colnames(data) <- colnames(counts)
 data <- data[!exclude, ]
 rownames(data) <- gene_names[!exclude]
-clust2 <- data.frame(
+clust <- data.frame(
   species = rep("homo_sapiens", times = length(type)), cell_type = type, source = source,
   age = age, well = well, batch = batch, plate = plate)
-rownames(clust2) <- colnames(counts)
-datatable(clust2[1:5, ])
+rownames(clust) <- colnames(counts)
+datatable(clust[1:5, ])
 ```
 
 ## SingleCellExperiment
 
 ```{r}
-sce <- SingleCellExperiment(assays = list(normcounts = as.matrix(counts)), colData = clust2)
-rowData(sce)$feature_symbol <- rownames(sce)
-cell_types <- sort(colnames(colData(sce))[grepl("cell_type", colnames(colData(sce)))])
+sce <- SingleCellExperiment(
+  assays = list(normcounts = as.matrix(sapply(counts, as.numeric))), colData = clust,
+  rowData = gene_names)
 sce
 ```
 
@@ -190,7 +191,8 @@ These sections assess and correct issues and irregularities in the dataset.
 Use the the log2 transformation of the transcript counts.
 
 ```{r}
-logcounts(sceset) <- log2(normcounts(sceset) + 1)
+logcounts(sce) <- log2(normcounts(sce) + 1)
+rowData(sce)$feature_symbol <- rowData(sce)
 ```
 
 ## Duplicates
@@ -214,8 +216,9 @@ isSpike(sce, "ERCC") <- grepl("^ERCC-", rownames(sce))
 Plot the library size.
 
 ```{r}
-for (ct in cell_types) {
-  print(plotPhenoData(sce, aes_string(x = "Total Counts", y = "Total Features", colour = ct)))}
+cell_types <- sort(colnames(colData(sce))[grepl("cell_type", colnames(colData(sce)))])
+# for (ct in cell_types) {
+#   print(plotColData(sce, aes_string(x = "total_counts", y = "total_features", colour = ct)))}
 ```
 
 ## Detected Genes
@@ -223,10 +226,10 @@ for (ct in cell_types) {
 Plot the detected genes.
 
 ```{r}
-for (ct in cell_types) {
-  print(plotPhenoData(
-    sce, aes_string(x = ct, y = "Total Features", colour = "log10_total_counts")) +
-      theme(axis.text.x = element_text(angle = 90, hjust = 1)))}
+# for (ct in cell_types) {
+#   print(plotColData(
+#     sce, aes_string(x = ct, y = "total_counts", colour = "log10_total_counts")) +
+#       theme(axis.text.x = element_text(angle = 90, hjust = 1)))}
 ```
 
 ## Expression
@@ -234,11 +237,11 @@ for (ct in cell_types) {
 Plot metrics about the expression of features.
 
 ```{r}
-plotQC(sce, type = "highest-expression")
+# plotHighestExprs(sce)
 ```
 
 ```{r}
-plotQC(sce, type = "exprs-freq-vs-mean")
+# plotExprsFreqVsMean(sce)
 ```
 
 # Dimension Reduction
