@@ -87,6 +87,8 @@ results_dir <- file.path(getwd(), "..", "results")
 library(conflicted)
 library(devtools)
 library(DT)
+library(SingleCellExperiment)
+library(scater)
 ```
 
 # Original Data {.tabset}
@@ -122,8 +124,8 @@ A more elegant solution is planned, but for now, the desired regions/cell types 
 
 ```{r}
 # TODO: Simplify formatting requirements for the variables.
-regions <- "*BA10*"
-cell_types <- "Ex1|Ex2|Ex3|Ex4|Ex5|Ex6|Ex7|Ex8"
+regions <- "*"
+cell_types <- "Ex1|Ex2|Ex3|Ex4|Ex5|Ex6|Ex7|Ex8|In1|In2|In3|In4|In5|In6|In7|In8"
 ```
 
 ### Counts
@@ -143,6 +145,100 @@ colnames(counts) <- cell_names
 reorder <- order(colnames(counts))
 counts <- counts[ , reorder]
 datatable(counts[1:5, 1:3])
+```
+
+### Clusters
+
+```{r}
+clust <- clust[clust[ , 2] %in% colnames(counts), ]
+clust <- clust[order(clust[ , 2]), ]
+source <- as.character(unlist(clust[ , 4]))
+batch <- as.character(unlist(clust[ , 4]))
+type <- as.character(unlist(clust[3]))
+age <- rep("51yo", times = length(batch))
+tmp <- sub("_S.+", "", colnames(counts))
+tmp <- matrix(unlist(strsplit(tmp, "_")), ncol = 2, byrow = TRUE)
+well <- tmp[ , 2]
+plate <- tmp[ , 1]
+data <- apply(counts, 1, as.numeric)
+data <- t(data)
+colnames(data) <- colnames(counts)
+data <- data[!exclude, ]
+rownames(data) <- gene_names[!exclude]
+clust2 <- data.frame(
+  species = rep("homo_sapiens", times = length(type)), cell_type = type, source = source,
+  age = age, well = well, batch = batch, plate = plate)
+rownames(clust2) <- colnames(counts)
+datatable(clust2[1:5, ])
+```
+
+## SingleCellExperiment
+
+```{r}
+sce <- SingleCellExperiment(assays = list(normcounts = as.matrix(counts)), colData = clust2)
+rowData(sce)$feature_symbol <- rownames(sce)
+cell_types <- sort(colnames(colData(sce))[grepl("cell_type", colnames(colData(sce)))])
+sce
+```
+
+# QC
+
+These sections assess and correct issues and irregularities in the dataset.
+
+## Normalization
+
+Use the the log2 transformation of the transcript counts.
+
+```{r}
+logcounts(sceset) <- log2(normcounts(sceset) + 1)
+```
+
+## Duplicates
+
+Remove features with duplicated names.
+
+```{r}
+sce <- sce[!duplicated(rowData(sce)$feature_symbol), ]
+```
+
+## ERCC Spike-ins
+
+Identify ERCC spike-ins.
+
+```{r}
+isSpike(sce, "ERCC") <- grepl("^ERCC-", rownames(sce))
+```
+
+## Library Size
+
+Plot the library size.
+
+```{r}
+for(ct in cell_types) {
+  print(plotPhenoData(sce, aes_string(x = "Total Counts", y = "Total Features", colour = ct)))}
+```
+
+## Detected Genes
+
+Plot the detected genes.
+
+```{r}
+for(ct in cell_types) {
+  print(plotPhenoData(
+    sce, aes_string(x = ct, y = "Total Features", colour = "log10_total_counts")) +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1)))}
+```
+
+## Expression
+
+Plot metrics about the expression of features.
+
+```{r}
+plotQC(sce, type = "highest-expression")
+```
+
+```{r}
+plotQC(sce, type = "exprs-freq-vs-mean")
 ```
 
 # References
