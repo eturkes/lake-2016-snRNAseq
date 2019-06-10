@@ -214,7 +214,7 @@ isSpike(sce, "ERCC") <- grepl("^ERCC-", rownames(sce))
 Plot the library size.
 
 ```{r}
-for(ct in cell_types) {
+for (ct in cell_types) {
   print(plotPhenoData(sce, aes_string(x = "Total Counts", y = "Total Features", colour = ct)))}
 ```
 
@@ -223,7 +223,7 @@ for(ct in cell_types) {
 Plot the detected genes.
 
 ```{r}
-for(ct in cell_types) {
+for (ct in cell_types) {
   print(plotPhenoData(
     sce, aes_string(x = ct, y = "Total Features", colour = "log10_total_counts")) +
       theme(axis.text.x = element_text(angle = 90, hjust = 1)))}
@@ -241,10 +241,27 @@ plotQC(sce, type = "highest-expression")
 plotQC(sce, type = "exprs-freq-vs-mean")
 ```
 
+# Dimension Reduction
+
+This section details steps taken to reduce the dimensionality of the dataset through methods like PCA, tSNE, UMAP, etc.
+
+## PCA
+
+We plot principal components using `plotPCA` from the `scater` package.
+
+```{r}
+for (ct in cell_types) {
+  print(plotPCA(sce, colour_by = ct))}
+```
+
 # References
 
 This is the concluding section of the document.
 Here we write relevant results to disk, output the `session_info`, and create a bibliography for works cited.
+
+```{r}
+saveRDS(sce, file = file.path(results_dir, "data", "sce.rds"))
+```
 
 ```{r}
 session_info()
