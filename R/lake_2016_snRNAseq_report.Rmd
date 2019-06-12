@@ -99,7 +99,6 @@ This section provides a brief look at the raw data before manipulation.
 ## Counts
 
 ```{r, cache = TRUE}
-# This chunk was run with "cache = TRUE".
 counts <- read.delim(
   file.path(data_dir, "Lake-2016_Gene_TPM.dat.gz"), "\t", header = FALSE, stringsAsFactors = FALSE)
 ```
