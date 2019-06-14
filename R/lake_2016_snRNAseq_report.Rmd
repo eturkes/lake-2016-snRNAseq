@@ -1,20 +1,20 @@
 ---
-title:               "Lake 2016 snRNAseq Report"
+title: "Lake 2016 snRNAseq Report"
 author:
-  - name:            "Emir Turkes"
-  - name:            "Columbia University"
-date:                '`r strftime(Sys.time(), format = "%B %d, %Y")`'
-bibliography:        "../lake-2016-snRNAseq.bib"
-biblio-style:        apalike
-link-citations:      true
+  - name: "Emir Turkes"
+  - name: "Columbia University"
+date: '`r strftime(Sys.time(), format = "%B %d, %Y")`'
+bibliography: "../lake-2016-snRNAseq.bib"
+biblio-style: apalike
+link-citations: true
 output:
   html_document:
     number_sections: true
-    theme:           lumen
-    toc:             true
-    toc_depth:       2
+    theme: lumen
+    toc: true
+    toc_depth: 2
     toc_float:
-      collapsed:     false
+      collapsed: false
       smooth_scroll: false
 knit:
   (function(inputFile, encoding) {
@@ -41,7 +41,7 @@ knit:
 #
 #    Emir Turkes can be contacted at emir.turkes@eturkes.com
 
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 8.5)
 ```
 
 <style type="text/css">
@@ -75,7 +75,7 @@ The source code and instructions for rerunning the analysis can be found at [git
 
 # ~~~ Breakdown of Methods ~~~ {-}
 
-The following top-level sections breakdown the methods used to perform the analysis.
+The following top-level sections break down the methods used to perform the analysis and only needs to be read if one is interested.
 We start by setting some global variables and loading in any required packages.
 
 ```{r}
