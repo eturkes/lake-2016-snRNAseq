@@ -249,6 +249,12 @@ This section details steps taken to reduce the dimensionality of the dataset thr
 
 ## PCA
 
+We start by performing PCA on all of the genes rather than just HVGs using denoisePCA from the scran package. This function automatically selects PCs by modelling technical noise.
+
+```{r, cache = TRUE}
+sce <- denoisePCA(sce, technical = new_trend, approx = TRUE)
+```
+
 We plot principal components using `plotPCA` from the `scater` package.
 
 ```{r}

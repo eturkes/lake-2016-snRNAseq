@@ -321,6 +321,23 @@ Hash: 61622995e32970a772e895bec2b4a305
 Requires: BH, R6, Rcpp, assertthat, glue, magrittr, pkgconfig, plogr,
     rlang, tibble, tidyselect
 
+Package: dqrng
+Source: CRAN
+Version: 0.2.1
+Hash: 545427f36621d72845b3dc11b79d16d9
+Requires: BH, Rcpp, sitmo
+
+Package: dynamicTreeCut
+Source: CRAN
+Version: 1.63-1
+Hash: f1c0d0344bcf8d1249a00eace1a84b98
+
+Package: edgeR
+Source: Bioconductor
+Version: 3.26.4
+Hash: 0253c92c97c838d06ea652ad5a71df99
+Requires: Rcpp, limma, locfit
+
 Package: evaluate
 Source: CRAN
 Version: 0.13
@@ -499,6 +516,16 @@ Package: lazyeval
 Source: CRAN
 Version: 0.2.2
 Hash: 563563691bea3cde6945a98996d7c166
+
+Package: limma
+Source: Bioconductor
+Version: 3.40.2
+Hash: 51b0628f70ad7afab4caf08a5049bad9
+
+Package: locfit
+Source: CRAN
+Version: 1.5-9.1
+Hash: f8adf87b055dff233b7c3f5b4a174554
 
 Package: magrittr
 Source: CRAN
@@ -691,6 +718,15 @@ Requires: BiocGenerics, BiocNeighbors, BiocParallel, BiocSingular,
     SingleCellExperiment, SummarizedExperiment, beachmat, dplyr,
     ggbeeswarm, ggplot2, viridis
 
+Package: scran
+Source: Bioconductor
+Version: 1.12.1
+Hash: 0be865d15471d2143a306d42982c81cb
+Requires: BH, BiocGenerics, BiocNeighbors, BiocParallel, BiocSingular,
+    DelayedArray, DelayedMatrixStats, Rcpp, S4Vectors,
+    SingleCellExperiment, SummarizedExperiment, beachmat, dqrng,
+    dynamicTreeCut, edgeR, igraph, limma, scater, statmod
+
 Package: sessioninfo
 Source: CRAN
 Version: 1.1.1
@@ -704,6 +740,12 @@ Hash: a48cf01573400333efa51dc999ab6447
 Requires: R6, crayon, digest, htmltools, httpuv, jsonlite, later, mime,
     promises, rlang, sourcetools, xtable
 
+Package: sitmo
+Source: CRAN
+Version: 2.0.1
+Hash: e3193200d5b9caab3d6d9dc9250c400a
+Requires: Rcpp
+
 Package: snow
 Source: CRAN
 Version: 0.4-3
@@ -713,6 +755,11 @@ Package: sourcetools
 Source: CRAN
 Version: 0.1.7
 Hash: d093478ac90064e670cd4bf1a99b47b6
+
+Package: statmod
+Source: CRAN
+Version: 1.4.32
+Hash: 78ae41a38e01fc19ac5a009739b3706c
 
 Package: stringi
 Source: CRAN
