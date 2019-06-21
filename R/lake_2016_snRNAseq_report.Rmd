@@ -1,7 +1,7 @@
 ---
 title: "Lake 2016 snRNAseq Report"
 author:
-  - name: "Emir Turkes"
+  - name: "Emir Turkes [et2628@cumc.columbia.edu]"
   - name: "Columbia University"
 date: '`r strftime(Sys.time(), format = "%B %d, %Y")`'
 bibliography: "../lake-2016-snRNAseq.bib"
@@ -11,6 +11,7 @@ output:
   html_document:
     number_sections: true
     theme: lumen
+    highlight: zenburn
     toc: true
     toc_depth: 2
     toc_float:
@@ -41,7 +42,7 @@ knit:
 #
 #    Emir Turkes can be contacted at emir.turkes@eturkes.com
 
-knitr::opts_chunk$set(fig.width = 8.5)
+knitr::opts_chunk$set(fig.width = 8.5, fig.height = 7, error = TRUE)
 ```
 
 <style type="text/css">
@@ -76,20 +77,14 @@ The source code and instructions for rerunning the analysis can be found at [git
 # ~~~ Breakdown of Methods ~~~ {-}
 
 The following top-level sections break down the methods used to perform the analysis and only needs to be read if one is interested.
-We start by setting some global variables and loading in any required packages.
+We start by loading in any required packages and setting some global variables.
 
 ```{r}
+packages <- c("conflicted", "DT", "SingleCellExperiment", "scater", "ggplot2")
+invisible(suppressMessages(lapply(packages, library, character.only = TRUE)))
+
 data_dir <- file.path(getwd(), "..", "data")
 results_dir <- file.path(getwd(), "..", "results")
-```
-
-```{r}
-library(conflicted)
-library(devtools)
-library(DT)
-library(SingleCellExperiment)
-library(scater)
-library(ggplot2)
 ```
 
 # Original Data {.tabset}
@@ -265,12 +260,10 @@ for (ct in cell_types) {
 # References
 
 This is the concluding section of the document.
-Here we write relevant results to disk, output the `session_info`, and create a bibliography for works cited.
+Here we write relevant results to disk, output the `sessionInfo`, and create a bibliography for works cited.
 
 ```{r}
 saveRDS(sce, file = file.path(results_dir, "data", "sce.rds"))
-```
 
-```{r}
-session_info()
+sessionInfo()
 ```
