@@ -11,7 +11,7 @@ output:
   html_document:
     number_sections: true
     theme: lumen
-    highlight: zenburn
+    highlight: haddock
     toc: true
     toc_depth: 2
     toc_float:
@@ -72,16 +72,17 @@ The source code and instructions for rerunning the analysis can be found at [git
 
 # Final Results
 
-**Read just this section for the final results of the analysis and a summary of the methods.**
+**Read just the following sub-section for the final results of the analysis and a brief summary of the methods.**
 
 # ~~~ Breakdown of Methods ~~~ {-}
 
-The following top-level sections break down the methods used to perform the analysis and only needs to be read if one is interested.
+**Sections from here to the end break down the methods used and are optional to read.**
+
 We start by loading in any required packages and setting some global variables.
 
 ```{r}
 packages <- c("conflicted", "DT", "SingleCellExperiment", "scater", "ggplot2")
-invisible(suppressMessages(lapply(packages, library, character.only = TRUE)))
+invisible(suppressPackageStartupMessages(lapply(packages, library, character.only = TRUE)))
 
 data_str <- "Lake-2016_Gene_TPM"
 data_dir <- file.path(getwd(), "..", "data")
@@ -96,7 +97,6 @@ This section provides a brief look at the raw data before manipulation.
 bfc <- BiocFileCache(data_dir, ask = FALSE)
 data <- bfcrpath(bfc, file.path(
   "http://genome-tech.ucsd.edu/public/Lake_Science_2016", paste0(data_str, ".dat.gz")))
-
 data <- bfcrpath(bfc, file.path(
   "http://genome-tech.ucsd.edu/public/Lake_Science_2016", paste0(data_str, "_Sample-annotation.txt")))
 rm(bfc)
@@ -139,6 +139,7 @@ cell_names <- cell_names[keep_cells]
 colnames(counts) <- cell_names
 reorder <- order(colnames(counts))
 counts <- counts[ , reorder]
+
 datatable(counts[1:5, 1:3])
 ```
 
@@ -164,6 +165,8 @@ clust <- data.frame(
   species = rep("homo_sapiens", times = length(type)), cell_type = type, source = source,
   age = age, well = well, batch = batch, plate = plate)
 rownames(clust) <- colnames(counts)
+rm(data, tmp)
+
 datatable(clust[1:5, ])
 ```
 
@@ -173,6 +176,7 @@ datatable(clust[1:5, ])
 sce <- SingleCellExperiment(
   assays = list(normcounts = as.matrix(sapply(counts, as.numeric))), colData = clust,
   rowData = gene_names)
+rm(counts, clust)
 sce
 ```
 
@@ -182,7 +186,7 @@ These sections assess and correct issues and irregularities in the dataset.
 
 ## Normalization
 
-Use the the log2 transformation of the transcript counts.
+Take the log2 transformation of the transcript counts.
 
 ```{r}
 logcounts(sce) <- log2(normcounts(sce) + 1)
@@ -210,9 +214,7 @@ isSpike(sce, "ERCC") <- grepl("^ERCC-", rownames(sce))
 Plot the library size.
 
 ```{r}
-cell_types <- sort(colnames(colData(sce))[grepl("cell_type", colnames(colData(sce)))])
-# for (ct in cell_types) {
-#   print(plotColData(sce, aes_string(x = "total_counts", y = "total_features", colour = ct)))}
+plotColData(sce, aes_string(x = "total_counts", y = "total_features", colour = ct))
 ```
 
 ## Detected Genes
