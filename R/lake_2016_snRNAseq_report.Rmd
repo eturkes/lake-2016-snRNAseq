@@ -42,7 +42,7 @@ knit:
 #
 #    Emir Turkes can be contacted at emir.turkes@eturkes.com
 
-knitr::opts_chunk$set(fig.width = 8.5, fig.height = 7, error = TRUE)
+knitr::opts_chunk$set(fig.width = 8.5, fig.height = 7)
 ```
 
 <style type="text/css">
@@ -81,7 +81,7 @@ The source code and instructions for rerunning the analysis can be found at [git
 We start by loading in any required packages and setting some global variables.
 
 ```{r}
-packages <- c("conflicted", "DT", "SingleCellExperiment", "scater", "ggplot2")
+packages <- c("conflicted", "DT", "SingleCellExperiment", "scater", "ggplot2", "BiocFileCache")
 invisible(suppressPackageStartupMessages(lapply(packages, library, character.only = TRUE)))
 
 data_str <- "Lake-2016_Gene_TPM"
@@ -95,9 +95,9 @@ This section provides a brief look at the raw data before manipulation.
 
 ```{r}
 bfc <- BiocFileCache(data_dir, ask = FALSE)
-data <- bfcrpath(bfc, file.path(
+counts <- bfcrpath(bfc, file.path(
   "http://genome-tech.ucsd.edu/public/Lake_Science_2016", paste0(data_str, ".dat.gz")))
-data <- bfcrpath(bfc, file.path(
+clust <- bfcrpath(bfc, file.path(
   "http://genome-tech.ucsd.edu/public/Lake_Science_2016", paste0(data_str, "_Sample-annotation.txt")))
 rm(bfc)
 ```
@@ -105,17 +105,14 @@ rm(bfc)
 ## Counts
 
 ```{r}
-counts <- read.delim(
-  file.path(tempdir(), data_str, paste0(data_str, ".dat.gz")), "\t",
-  header = FALSE, stringsAsFactors = FALSE)
+counts <- read.delim(counts, "\t", header = FALSE, stringsAsFactors = FALSE)
 datatable(counts[1:5, 1:3])
 ```
 
 ## Clusters
 
 ```{r}
-clust <- read.table(
-  file.path(tempdir(), data_str,paste0(data_str, "_Sample-annotation.txt")), header = TRUE)
+clust <- read.table(clust, header = TRUE)
 datatable(clust[1:5, ])
 ```
 
@@ -214,7 +211,7 @@ isSpike(sce, "ERCC") <- grepl("^ERCC-", rownames(sce))
 Plot the library size.
 
 ```{r}
-plotColData(sce, aes_string(x = "total_counts", y = "total_features", colour = ct))
+# plotColData(sce, aes_string(x = "total_counts", y = "total_features", colour = ct))
 ```
 
 ## Detected Genes
@@ -249,14 +246,14 @@ This section details steps taken to reduce the dimensionality of the dataset thr
 We start by performing PCA on all of the genes rather than just HVGs using denoisePCA from the scran package. This function automatically selects PCs by modelling technical noise.
 
 ```{r, cache = TRUE}
-sce <- denoisePCA(sce, technical = new_trend, approx = TRUE)
+# sce <- denoisePCA(sce, technical = new_trend, approx = TRUE)
 ```
 
 We plot principal components using `plotPCA` from the `scater` package.
 
 ```{r}
-for (ct in cell_types) {
-  print(plotPCA(sce, colour_by = ct))}
+# for (ct in cell_types) {
+#   print(plotPCA(sce, colour_by = ct))}
 ```
 
 # References

@@ -1,7 +1,11 @@
 PackratFormat: 1.4
 PackratVersion: 0.5.0
 RVersion: 3.6.0
-Repos: CRAN=https://cran.rstudio.com/
+Repos: BioCsoft=https://bioconductor.org/packages/3.9/bioc,
+    BioCann=https://bioconductor.org/packages/3.9/data/annotation,
+    BioCexp=https://bioconductor.org/packages/3.9/data/experiment,
+    BioCworkflows=https://bioconductor.org/packages/3.9/workflows,
+    CRAN=https://cran.rstudio.com
 
 Package: BH
 Source: CRAN
