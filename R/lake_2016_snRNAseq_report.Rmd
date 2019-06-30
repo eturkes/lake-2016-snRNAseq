@@ -81,14 +81,21 @@ The source code and instructions for rerunning the analysis can be found at [git
 We start by loading in any required packages and setting some global variables.
 
 ```{r}
-packages <- c("conflicted", "DT", "SingleCellExperiment", "scater", "ggplot2", "BiocFileCache")
+packages <- c(
+  "conflicted", "DT", "SingleCellExperiment", "scater",
+  "ggplot2", "BiocFileCache", "biomaRt", "dplyr")
 invisible(suppressPackageStartupMessages(lapply(packages, library, character.only = TRUE)))
 
 options(stringsAsFactors = FALSE)
 
 data_str <- "Lake-2016_Gene_TPM"
 data_dir <- file.path(getwd(), "..", "data")
+assets_dir <- file.path(getwd(), "..", "assets")
 results_dir <- file.path(getwd(), "..", "results")
+
+# Create a cache for storing the objects of long-running computations.
+if (!dir.exists(file.path(assets_dir, "cache"))) {
+  dir.create(file.path(assets_dir, "cache"))}
 ```
 
 # Original Data {.tabset}
@@ -169,9 +176,59 @@ rm(counts, anno)
 sce
 ```
 
-# QC
+## ERCC Spike-ins
 
-These sections assess and correct issues and irregularities in the dataset.
+We identify and add spike-ins to the SCE object.
+
+```{r}
+isSpike(sce, "ERCC") <- grepl("^ERCC", rownames(sce))
+summary(isSpike(sce, "ERCC"))
+```
+
+## Gene Annotations
+
+We add annotations based on the hg38 reference genome, the same used in @lake_neuronal_2016.
+
+```{r, cache = TRUE}
+rds <- file.path(assets_dir, "cache", "gene_anno.rds")
+if (file.exists(rds)) {
+  gene_anno <- readRDS(rds)
+} else {
+  tmp <- useEnsembl(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+  attr_string <- c(
+    "hgnc_symbol", "ensembl_gene_id", "external_gene_name", "chromosome_name", "start_position",
+    "end_position", "strand", "description", "percentage_gene_gc_content", "gene_biotype")
+  gene_anno <- getBM(
+    attributes = attr_string, filters = "external_gene_name", values = rownames(sce), mart = tmp)
+  saveRDS(gene_anno, rds)}
+```
+
+```{r}
+# Remove genes not in the RNAseq dataset.
+remove_genes <- which(!gene_anno$external_gene_name %in% rownames(sce))
+gene_anno <- gene_anno[-remove_genes, ]
+
+# Remove annotations to scaffolds, assembly patches, and alternative loci.
+chromosomes <- c(1:22, "X", "Y", "MT")
+gene_anno <- gene_anno[which(gene_anno$chromosome_name %in% chromosomes), ]
+
+# Remove duplicates.
+dup <- table(gene_anno$external_gene_name)
+dup <- sort(dup[dup > 1], decreasing = TRUE)
+dup <- which(gene_anno$external_gene_name %in% names(dup))
+gene_anno2 <- gene_anno[dup, ]
+gene_anno2 <- gene_anno2[which(gene_anno2$hgnc_symbol == gene_anno2$external_gene_name), ]
+gene_anno2 <- distinct(gene_anno2, external_gene_name, .keep_all = TRUE)
+gene_anno <- rbind(gene_anno[-dup, ], gene_anno2)
+
+# Remove missing.
+keep_genes <- match(gene_anno$external_gene_name, rownames(sce))
+sce <- sce[keep_genes, ]
+
+rowData(sce) <- gene_anno
+rm(gene_anno, gene_anno2)
+names(rowData(sce))
+```
 
 # References
 
