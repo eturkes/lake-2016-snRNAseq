@@ -96,12 +96,11 @@ results_dir <- file.path(getwd(), "..", "results")
 This section provides a brief look at the raw data before manipulation.
 
 ```{r}
-bfc <- BiocFileCache(data_dir, ask = FALSE)
-counts <- bfcrpath(bfc, file.path(
+tmp <- BiocFileCache(data_dir, ask = FALSE)
+counts <- bfcrpath(tmp, file.path(
   "http://genome-tech.ucsd.edu/public/Lake_Science_2016", paste0(data_str, ".dat.gz")))
-anno <- bfcrpath(bfc, file.path(
+anno <- bfcrpath(tmp, file.path(
   "http://genome-tech.ucsd.edu/public/Lake_Science_2016", paste0(data_str, "_Sample-annotation.txt")))
-rm(bfc)
 ```
 
 ## Counts
@@ -172,81 +171,6 @@ sce
 # QC
 
 These sections assess and correct issues and irregularities in the dataset.
-
-## Normalization
-
-Take the log2 transformation of the transcript counts.
-
-```{r}
-logcounts(sce) <- log2(normcounts(sce) + 1)
-rowData(sce)$feature_symbol <- rowData(sce)
-```
-
-## Duplicates
-
-Remove features with duplicated names.
-
-```{r}
-sce <- sce[!duplicated(rowData(sce)$feature_symbol), ]
-```
-
-## ERCC Spike-ins
-
-Identify ERCC spike-ins.
-
-```{r}
-isSpike(sce, "ERCC") <- grepl("^ERCC-", rownames(sce))
-```
-
-## Library Size
-
-Plot the library size.
-
-```{r}
-# plotColData(sce, aes_string(x = "total_counts", y = "total_features", colour = ct))
-```
-
-## Detected Genes
-
-Plot the detected genes.
-
-```{r}
-# for (ct in cell_types) {
-#   print(plotColData(
-#     sce, aes_string(x = ct, y = "total_counts", colour = "log10_total_counts")) +
-#       theme(axis.text.x = element_text(angle = 90, hjust = 1)))}
-```
-
-## Expression
-
-Plot metrics about the expression of features.
-
-```{r}
-# plotHighestExprs(sce)
-```
-
-```{r}
-# plotExprsFreqVsMean(sce)
-```
-
-# Dimension Reduction
-
-This section details steps taken to reduce the dimensionality of the dataset through methods like PCA, tSNE, UMAP, etc.
-
-## PCA
-
-We start by performing PCA on all of the genes rather than just HVGs using denoisePCA from the scran package. This function automatically selects PCs by modelling technical noise.
-
-```{r, cache = TRUE}
-# sce <- denoisePCA(sce, technical = new_trend, approx = TRUE)
-```
-
-We plot principal components using `plotPCA` from the `scater` package.
-
-```{r}
-# for (ct in cell_types) {
-#   print(plotPCA(sce, colour_by = ct))}
-```
 
 # References
 
