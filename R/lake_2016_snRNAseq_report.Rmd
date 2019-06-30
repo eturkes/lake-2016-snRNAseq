@@ -84,6 +84,8 @@ We start by loading in any required packages and setting some global variables.
 packages <- c("conflicted", "DT", "SingleCellExperiment", "scater", "ggplot2", "BiocFileCache")
 invisible(suppressPackageStartupMessages(lapply(packages, library, character.only = TRUE)))
 
+options(stringsAsFactors = FALSE)
+
 data_str <- "Lake-2016_Gene_TPM"
 data_dir <- file.path(getwd(), "..", "data")
 results_dir <- file.path(getwd(), "..", "results")
@@ -105,7 +107,7 @@ rm(bfc)
 ## Counts
 
 ```{r}
-counts <- read.delim(counts, "\t", header = FALSE, stringsAsFactors = FALSE)
+counts <- read.delim(counts, "\t", header = FALSE)
 datatable(counts[1:5, 1:3])
 ```
 
@@ -123,19 +125,19 @@ Here we do any data wrangling neccessary to transform the data into more conveni
 ### Counts
 
 ```{r}
-gene_names <- counts[ , 1]
-cell_names <- counts[1, ]
-cell_names <- as.character(unlist(cell_names))
-cell_names <- cell_names[-1]
-gene_names <- gene_names[-1]
+counts <- counts[!duplicated(counts[ , 1]), ]
+genes <- counts[ , 1]
+genes <- genes[-1]
+cells <- as.character(unlist(counts[1, ]))
+cells <- cells[-1]
+keep <- cells %in% anno[ , 2] # Columns 1 and 2 are not identical.
 counts <- counts[-1, -1]
-exclude <- duplicated(gene_names)
-keep_cells <- cell_names %in% anno[ , 2]
-counts <- counts[ , keep_cells]
-cell_names <- cell_names[keep_cells]
-colnames(counts) <- cell_names
-reorder <- order(colnames(counts))
-counts <- counts[ , reorder]
+counts <- counts[ , keep]
+cells <- cells[keep]
+colnames(counts) <- cells
+counts <- counts[ , order(colnames(counts))] # Counts file is originally unaligned with annotations.
+rownames(counts) <- genes
+counts <- as.matrix(counts)
 datatable(counts[1:5, 1:3])
 ```
 
@@ -145,29 +147,24 @@ datatable(counts[1:5, 1:3])
 anno <- anno[anno[ , 2] %in% colnames(counts), ]
 anno <- anno[order(anno[ , 2]), ]
 region <- as.character(unlist(anno[ , 4]))
-lake_annoer_name <- as.character(unlist(anno[3]))
+lake_cluster_name <- as.character(unlist(anno[3]))
 tmp <- sub("_S.+", "", colnames(counts))
 tmp <- matrix(unlist(strsplit(tmp, "_")), ncol = 2, byrow = TRUE)
 well <- tmp[ , 2]
 plate <- tmp[ , 1]
-data <- apply(counts, 1, as.numeric)
-data <- t(data)
-colnames(data) <- colnames(counts)
-data <- data[!exclude, ]
-rownames(data) <- gene_names[!exclude]
 anno <- data.frame(
   lake_cluster_name = lake_cluster_name, region = region, well = well, plate = plate)
 rownames(anno) <- colnames(counts)
-rm(data, tmp)
 datatable(anno[1:5, ])
 ```
 
 ## SingleCellExperiment
 
+The data is now sufficiently prepared to form a SingleCellExperiment (SCE) object.
+Importantly, the data was provided as TPMs not raw counts, so we use the `normcounts` slot and tailor all following analyses to this fact.
+
 ```{r}
-sce <- SingleCellExperiment(
-  assays = list(normcounts = as.matrix(sapply(counts, as.numeric))), colData = anno,
-  rowData = gene_names)
+sce <- SingleCellExperiment(assays = list(normcounts = counts), colData = anno)
 rm(counts, anno)
 sce
 ```
