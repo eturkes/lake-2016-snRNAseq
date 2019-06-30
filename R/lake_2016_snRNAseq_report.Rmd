@@ -96,11 +96,12 @@ results_dir <- file.path(getwd(), "..", "results")
 This section provides a brief look at the raw data before manipulation.
 
 ```{r}
-tmp <- BiocFileCache(data_dir, ask = FALSE)
-counts <- bfcrpath(tmp, file.path(
+bfc <- BiocFileCache(data_dir, ask = FALSE)
+counts <- bfcrpath(bfc, file.path(
   "http://genome-tech.ucsd.edu/public/Lake_Science_2016", paste0(data_str, ".dat.gz")))
-anno <- bfcrpath(tmp, file.path(
+anno <- bfcrpath(bfc, file.path(
   "http://genome-tech.ucsd.edu/public/Lake_Science_2016", paste0(data_str, "_Sample-annotation.txt")))
+rm(bfc)
 ```
 
 ## Counts
@@ -133,10 +134,10 @@ keep <- cells %in% anno[ , 2] # Columns 1 and 2 are not identical.
 counts <- counts[-1, -1]
 counts <- counts[ , keep]
 cells <- cells[keep]
+counts <- as.matrix(as.data.frame(lapply(counts, as.numeric)))
 colnames(counts) <- cells
 counts <- counts[ , order(colnames(counts))] # Counts file is originally unaligned with annotations.
 rownames(counts) <- genes
-counts <- as.matrix(counts)
 datatable(counts[1:5, 1:3])
 ```
 
