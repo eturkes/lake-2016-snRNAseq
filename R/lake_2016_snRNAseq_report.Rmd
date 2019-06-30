@@ -129,7 +129,7 @@ datatable(anno[1:5, ])
 
 Here we do any data wrangling neccessary to transform the data into more convenient formats for downstream analysis.
 
-### Counts
+## Counts
 
 ```{r}
 counts <- counts[!duplicated(counts[ , 1]), ]
@@ -148,7 +148,7 @@ rownames(counts) <- genes
 datatable(counts[1:5, 1:3])
 ```
 
-### Annotations
+## Annotations
 
 ```{r}
 anno <- anno[anno[ , 2] %in% colnames(counts), ]
