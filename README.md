@@ -22,3 +22,12 @@
 #### *This analysis is a work-in-progress*
 
 Analysis of Lake 2016 snRNAseq
+
+A Docker image for this project is available from [DockerHub](https://cloud.docker.com/repository/docker/eturkes/lake-2016-snrnaseq/general).  
+This is the recommended way to reproduce and explore the project.  
+
+To open RStudio, run:
+```
+docker-compose up rstudio
+```
+It will be available in your web browser at the address [localhost:8791](http://localhost:8791).

@@ -1,0 +1,12 @@
+gdrive
+.git
+R
+assets
+COPYING
+docker-compose.yml
+.gitignore
+lake-2016-snRNAseq.bib
+lake-2016-snRNAseq.Rproj
+NOTICE
+README.md
+results
