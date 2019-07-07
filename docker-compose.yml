@@ -26,7 +26,7 @@ services:
     command: Rscript -e "source('/lake-2016-snRNAseq/R/run_all.R')"
 
   rstudio:
-    image: eturkes/lake-2016-snrnaseq:R3.6.0v2
+    image: eturkes/lake-2016-snrnaseq:R3.6.0v1
     volumes:
       - ".:/lake-2016-snRNAseq:rw"
     ports:
