@@ -21,10 +21,21 @@
 # Lake 2016 snRNAseq Analysis
 #### *This analysis is a work-in-progress*
 
-Analysis of Lake 2016 snRNAseq
+Analysis of Lake 2016 snRNAseq data
 
-A Docker image for this project is available from [DockerHub](https://cloud.docker.com/repository/docker/eturkes/lake-2016-snrnaseq/general).  
-This is the recommended way to reproduce and explore the project.  
+The up-to-date R Markdown HTML report can be found [here](https://drive.google.com/file/d/1vwjFSnYd1bUV_NGqQmY8oqoSFR1gdgQy/view?usp=sharing).
+After downloading, it should be opened in a web browser.
+
+In order to reproduce the report, prerequisite data must be downloaded from my [Google Drive](https://drive.google.com/drive/folders/1AabpzFGfe7ZMaQC3fV4IiwlSn0KupsqJ?usp=sharing).
+After downloading and unzipping, move the directory to the project root and rename it as `gdrive`.
+
+A Docker image for this project is available from [DockerHub](https://cloud.docker.com/repository/docker/eturkes/lake-2016-snrnaseq/general).
+This is the recommended way to reproduce and explore the project.
+
+To run all scripts and generate an HTML report in the `results` directory, just run:
+```
+docker-compose run all
+```
 
 To open RStudio, run:
 ```

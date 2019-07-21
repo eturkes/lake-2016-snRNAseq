@@ -23,12 +23,12 @@ services:
     image: eturkes/lake-2016-snrnaseq:R3.6.0v1
     volumes:
       - ".:/lake-2016-snRNAseq:rw"
-    command: Rscript -e "source('/lake-2016-snRNAseq/R/run_all.R')"
+    command: Rscript -e "setwd('/lake-2016-snRNAseq/R/')" -e "rmarkdown::render('lake_2016_snRNAseq_report.Rmd', output_file = '../results/lake-2016-snRNAseq-report.html')"
 
   rstudio:
     image: eturkes/lake-2016-snrnaseq:R3.6.0v1
     volumes:
-      - ".:/lake-2016-snRNAseq:rw"
+      - ".:/home/rstudio/lake-2016-snRNAseq:rw"
     ports:
       - "127.0.0.1:8791:8787"
     environment:
