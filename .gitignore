@@ -37,3 +37,6 @@ vignettes/*.pdf
 
 # Things that should not be tracked by Git, so are instead stored in Google Drive
 /gdrive/
+
+# Publicly available data that do not need to be backed up
+/data/

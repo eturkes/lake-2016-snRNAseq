@@ -72,26 +72,24 @@ The source code and instructions for rerunning the analysis can be found at [git
 
 # Final Results
 
-**Read just the following sub-section for the final results of the analysis and a brief summary of the methods.**
+**None available...yet!**
 
 # ~~~ Breakdown of Methods ~~~ {-}
 
 **Sections from here to the end break down the methods used and are optional to read.**
 
-We start by loading in any required packages and setting some global variables.
+We start by setting some global variables abd loading in any required packages.
 
 ```{r}
-packages <- c(
-  "conflicted", "DT", "SingleCellExperiment", "scater",
-  "ggplot2", "BiocFileCache", "biomaRt", "dplyr")
-invisible(suppressPackageStartupMessages(lapply(packages, library, character.only = TRUE)))
-
-options(stringsAsFactors = FALSE)
-
 data_str <- "Lake-2016_Gene_TPM"
 data_dir <- file.path(getwd(), "..", "data")
 assets_dir <- file.path(getwd(), "..", "assets")
 results_dir <- file.path(getwd(), "..", "results")
+
+packages <- c("conflicted", "DT", "Seurat","BiocFileCache")
+invisible(suppressPackageStartupMessages(lapply(packages, library, character.only = TRUE)))
+
+options(stringsAsFactors = FALSE)
 
 # Create a cache for storing the objects of long-running computations.
 if (!dir.exists(file.path(assets_dir, "cache"))) {
@@ -101,6 +99,7 @@ if (!dir.exists(file.path(assets_dir, "cache"))) {
 # Original Data {.tabset}
 
 This section provides a brief look at the raw data before manipulation.
+We note that the counts data was released in TPM form.
 
 ```{r}
 bfc <- BiocFileCache(data_dir, ask = FALSE)
@@ -165,69 +164,27 @@ rownames(anno) <- colnames(counts)
 datatable(anno[1:5, ])
 ```
 
-## SingleCellExperiment
+## ERCC Spike-in
 
-The data is now sufficiently prepared to form a SingleCellExperiment (SCE) object.
-Importantly, the data was provided as TPMs not raw counts, so we use the `normcounts` slot and tailor all following analyses to this fact.
+We calculate ERCC abundances and remove them from the counts matrix.
 
 ```{r}
-sce <- SingleCellExperiment(assays = list(normcounts = counts), colData = anno)
+ERCC_index <- grep(pattern = "^ERCC", x = rownames(counts), value = FALSE)
+percent_ERCC <- colSums(counts[ERCC_index, ]) / colSums(counts)
+counts <- counts[-ERCC_index, ]
+anno$percent_ERCC <- percent_ERCC
+datatable(anno[1:5, ])
+```
+
+## Seurat
+
+The data is now sufficiently prepared to form a Seurat object.
+We choose not to use a SingleCellExperiement (SCE) object at this time as the data was only released as TPMs, which limit many packages in the SCE ecosystem.
+
+```{r}
+seurat <- CreateSeuratObject(counts = counts, meta.data = anno)
 rm(counts, anno)
-sce
-```
-
-## ERCC Spike-ins
-
-We identify and add spike-ins to the SCE object.
-
-```{r}
-isSpike(sce, "ERCC") <- grepl("^ERCC", rownames(sce))
-summary(isSpike(sce, "ERCC"))
-```
-
-## Gene Annotations
-
-We add annotations based on the hg38 reference genome, the same used in @lake_neuronal_2016.
-
-```{r, cache = TRUE}
-rds <- file.path(assets_dir, "cache", "gene_anno.rds")
-if (file.exists(rds)) {
-  gene_anno <- readRDS(rds)
-} else {
-  tmp <- useEnsembl(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
-  attr_string <- c(
-    "hgnc_symbol", "ensembl_gene_id", "external_gene_name", "chromosome_name", "start_position",
-    "end_position", "strand", "description", "percentage_gene_gc_content", "gene_biotype")
-  gene_anno <- getBM(
-    attributes = attr_string, filters = "external_gene_name", values = rownames(sce), mart = tmp)
-  saveRDS(gene_anno, rds)}
-```
-
-```{r}
-# Remove genes not in the RNAseq dataset.
-remove_genes <- which(!gene_anno$external_gene_name %in% rownames(sce))
-gene_anno <- gene_anno[-remove_genes, ]
-
-# Remove annotations to scaffolds, assembly patches, and alternative loci.
-chromosomes <- c(1:22, "X", "Y", "MT")
-gene_anno <- gene_anno[which(gene_anno$chromosome_name %in% chromosomes), ]
-
-# Remove duplicates.
-dup <- table(gene_anno$external_gene_name)
-dup <- sort(dup[dup > 1], decreasing = TRUE)
-dup <- which(gene_anno$external_gene_name %in% names(dup))
-gene_anno2 <- gene_anno[dup, ]
-gene_anno2 <- gene_anno2[which(gene_anno2$hgnc_symbol == gene_anno2$external_gene_name), ]
-gene_anno2 <- distinct(gene_anno2, external_gene_name, .keep_all = TRUE)
-gene_anno <- rbind(gene_anno[-dup, ], gene_anno2)
-
-# Remove missing.
-keep_genes <- match(gene_anno$external_gene_name, rownames(sce))
-sce <- sce[keep_genes, ]
-
-rowData(sce) <- gene_anno
-rm(gene_anno, gene_anno2)
-names(rowData(sce))
+seurat
 ```
 
 # References
@@ -236,7 +193,7 @@ This is the concluding section of the document.
 Here we write relevant results to disk, output the `sessionInfo`, and create a bibliography for works cited.
 
 ```{r}
-saveRDS(sce, file = file.path(results_dir, "data", "sce.rds"))
+saveRDS(seurat, file = file.path(results_dir, "data", "seurat.rds"))
 
 sessionInfo()
 ```
