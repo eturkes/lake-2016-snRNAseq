@@ -34,6 +34,7 @@ RUN apt-get update \
         -e "install.packages('ggrepel')" \
         -e "install.packages('ggplot2')" \
         -e "install.packages('Rtsne')" \
+        -e "install.packages('dplyr')" \
         -e "install.packages('BiocManager')" \
         -e "BiocManager::install('BiocFileCache')" \
         -e "BiocManager::install('biomaRt')" \
