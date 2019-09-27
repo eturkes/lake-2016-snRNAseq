@@ -86,7 +86,8 @@ data_dir <- file.path(getwd(), "..", "data")
 assets_dir <- file.path(getwd(), "..", "assets")
 results_dir <- file.path(getwd(), "..", "results")
 
-packages <- c("conflicted", "DT", "Seurat","BiocFileCache", "biomaRt", "dplyr")
+packages <- c(
+  "conflicted", "DT", "SingleCellExperiment", "BiocFileCache", "biomaRt", "dplyr", "Seurat")
 invisible(suppressPackageStartupMessages(lapply(packages, library, character.only = TRUE)))
 
 options(stringsAsFactors = FALSE)
@@ -224,14 +225,17 @@ rm(gene_anno, gene_anno2)
 datatable(counts[1:5, 1:3])
 ```
 
-## Seurat
+## SingleCellExperiment & Seurat
 
-The data is now sufficiently prepared to form a Seurat object.
-We choose not to use a SingleCellExperiement (SCE) object at this time as the data was only released as TPMs, which limit many packages in the SCE ecosystem.
+The data is now sufficiently prepared to form a SingleCellExperiment and Seurat object.
+We create both at this stage because SCE is limited in regards to QC with only TPM counts, while Seurat has compatibility.
 
 ```{r}
-seurat <- CreateSeuratObject(counts = counts, meta.data = anno)
+sce <- SingleCellExperiment(assays = list(normcounts = counts), colData = anno)
+logcounts(sce) <- log2(normcounts(sce) + 1)
+seurat <- as.Seurat(sce, counts = "normcounts", data = "logcounts")
 rm(counts, anno)
+sce
 seurat
 ```
 
@@ -241,7 +245,8 @@ This is the concluding section of the document.
 Here we write relevant results to disk, output the `sessionInfo`, and create a bibliography for works cited.
 
 ```{r}
-saveRDS(seurat, file = file.path(results_dir, "data", "seurat.rds"))
+saveRDS(sce, file = file.path(results_dir, "data", "sce_orig.rds"))
+saveRDS(sce, file = file.path(results_dir, "data", "seurat_orig.rds"))
 
 sessionInfo()
 ```
