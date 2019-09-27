@@ -30,14 +30,22 @@ RUN apt-get update \
         -e "install.packages('rprojroot')" \
         -e "install.packages('data.table')" \
         -e "install.packages('DT')" \
-        -e "install.packages('Seurat')" \
+        -e "install.packages('dplyr')" \
         -e "install.packages('ggrepel')" \
         -e "install.packages('ggplot2')" \
+        -e "install.packages('svd')" \
         -e "install.packages('Rtsne')" \
-        -e "install.packages('dplyr')" \
+        -e "install.packages('Seurat')" \
         -e "install.packages('BiocManager')" \
         -e "BiocManager::install('BiocFileCache')" \
+        -e "BiocManager::install('SingleCellExperiment')" \
         -e "BiocManager::install('biomaRt')" \
+        -e "BiocManager::install('S4Vectors')" \
+        -e "BiocManager::install('SummarizedExperiment')" \
+        -e "BiocManager::install('DropletUtils')" \
+        -e "BiocManager::install('scater')" \
+        -e "BiocManager::install('scran')" \
+        -e "BiocManager::install('BiocSingular')" \
     && apt-get clean \
     && rm -Rf /var/lib/apt/lists/ \
         /tmp/downloaded_packages/ \
