@@ -1,8 +1,8 @@
 ---
 title: "Lake 2016 snRNAseq Report"
 author:
-  - name: "Emir Turkes [et2628@cumc.columbia.edu]"
-  - name: "Columbia University"
+  - name: "Emir Turkes [emir.turkes@eturkes.com]"
+  - name: "UK Dementia Research Institute at UCL"
 date: '`r strftime(Sys.time(), format = "%B %d, %Y")`'
 bibliography: "../lake-2016-snRNAseq.bib"
 biblio-style: apalike
