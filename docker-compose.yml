@@ -30,6 +30,6 @@ services:
     volumes:
       - ".:/home/rstudio/lake-2016-snRNAseq:rw"
     ports:
-      - "127.0.0.1:8791:8787"
+      - "127.0.0.1:8793:8787"
     environment:
       -  DISABLE_AUTH=true
