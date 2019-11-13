@@ -35,6 +35,9 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 
+# R Environment Variables
+.Renviron
+
 # Things that should not be tracked by Git, so are instead stored in Google Drive
 /gdrive/
 
